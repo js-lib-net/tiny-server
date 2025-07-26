@@ -1,8 +1,6 @@
 ﻿using log4net.Config;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Net;
 using TinyServer;
 
 namespace Demo
@@ -25,7 +23,7 @@ namespace Demo
             IContainer container = new RmiContainer();
             container.AddMapping("Demo.Service", typeof(Service));
 
-            HttpServer server = new HttpServer(storage, container, 8888);
+            HttpServer server = new HttpServer(storage, container, IPAddress.Any, 8888);
             server.Start();
 
             Console.Read();

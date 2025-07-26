@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using log4net;
 
 namespace TinyServer
@@ -19,28 +20,28 @@ namespace TinyServer
 
         private readonly IEventsManager eventsManager;
 
-        public HttpServer(IStorage storage, int port)
+        public HttpServer(IStorage storage, IPAddress listeningAddress, int listeningPort)
         {
-            log.Debug("HttpServer(IStorage,int)");
-            this.connector = new HttpConnector(this, port);
+            log.Debug("HttpServer(IStorage storage, IPAddress listeningAddress, int listeningPort)");
+            this.connector = new HttpConnector(this, listeningAddress, listeningPort);
             this.storage = storage;
             this.container = null;
             this.eventsManager = new EventsManager();
         }
 
-        public HttpServer(IContainer container, int port)
+        public HttpServer(IContainer container, IPAddress listeningAddress, int listeningPort)
         {
-            log.Debug("HttpServer(IContainer,int)");
-            this.connector = new HttpConnector(this, port);
+            log.Debug("HttpServer(IContainer container, IPAddress listeningAddress, int listeningPort)");
+            this.connector = new HttpConnector(this, listeningAddress, listeningPort);
             this.storage = null;
             this.container = container;
             this.eventsManager = new EventsManager();
         }
 
-        public HttpServer(IStorage storage, IContainer container, int port)
+        public HttpServer(IStorage storage, IContainer container, IPAddress listeningAddress, int listeningPort)
         {
-            log.Debug("HttpServer(IStorage,IContainer,int)");
-            this.connector = new HttpConnector(this, port);
+            log.Debug("HttpServer(IStorage storage, IContainer container, IPAddress listeningAddress, int listeningPort)");
+            this.connector = new HttpConnector(this, listeningAddress, listeningPort);
             this.storage = storage;
             this.container = container;
             this.eventsManager = new EventsManager();

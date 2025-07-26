@@ -16,13 +16,19 @@ namespace TinyServer
         private static readonly int RECEIVE_TIMEOUT = 8000;
 
         private readonly IServletFactory servletFactory;
-        private readonly int port;
+        private readonly IPAddress listeningAddress;
+        private readonly int listeningPort;
         private volatile bool running;
 
-        public HttpConnector(IServletFactory servletFactory, int port)
+        public HttpConnector(IServletFactory servletFactory, IPAddress listeningAddress, int listeningPort)
         {
+            log.Debug("HttpConnector(IServletFactory servletFactory, IPAddress listeningAddress, int listeningPort)");
+            log.Debug($"listeningAddress: {listeningAddress}");
+            log.Debug($"listeningPort: {listeningPort}");
+
             this.servletFactory = servletFactory;
-            this.port = port;
+            this.listeningAddress = listeningAddress;
+            this.listeningPort = listeningPort;
         }
 
         public void Start()
@@ -43,7 +49,7 @@ namespace TinyServer
             {
                 try
                 {
-                    socket.Connect(IPAddress.Loopback, port);
+                    socket.Connect(IPAddress.Loopback, listeningPort);
                 }
                 catch (Exception e)
                 {
@@ -54,10 +60,10 @@ namespace TinyServer
 
         public void Run()
         {
-            log.Debug("Start HTTP connector thread " + Thread.CurrentThread);
+            log.Debug($"Start HTTP connector thread {Thread.CurrentThread}");
 
             // to listen to both IPv4 and IPv6 need to start listening to IPv6 and set socket option IPv6Only to false
-            TcpListener serverSocket = new TcpListener(IPAddress.IPv6Any, port);
+            TcpListener serverSocket = new TcpListener(listeningAddress, listeningPort);
             serverSocket.Server.SetSocketOption(SocketOptionLevel.IPv6, SocketOptionName.IPv6Only, 0);
             serverSocket.Start();
             log.Debug("Listen for HTTP requests on " + serverSocket.LocalEndpoint);

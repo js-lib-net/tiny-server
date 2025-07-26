@@ -1,10 +1,16 @@
 ﻿using System;
 using System.IO;
+using System.Web.SessionState;
 
 namespace TinyServer
 {
     public class FileStorage : IStorage
     {
+        public static IStorage New(string baseDir)
+        {
+            return new FileStorage(baseDir);
+        }
+
         private readonly string baseDir;
 
         public FileStorage(string baseDir)
